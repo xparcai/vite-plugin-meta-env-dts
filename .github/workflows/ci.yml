@@ -14,44 +14,48 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+
       - name: Set node
         uses: actions/setup-node@v3
         with:
-          node-version: 16.x
-
-      - name: Setup
-        run: npm i -g @antfu/ni
+          node-version: lts/*
+          cache: pnpm
 
       - name: Install
-        run: nci
+        run: pnpm install --frozen-lockfile
 
       - name: Lint
-        run: nr lint
+        run: pnpm run lint
 
   test:
     runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
-        node: [16.x, 18.x]
+        node: [lts/*]
         os: [ubuntu-latest, windows-latest, macos-latest]
       fail-fast: false
 
     steps:
       - uses: actions/checkout@v3
-      - name: Set node ${{ matrix.node }}
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+
+      - name: Set node version to ${{ matrix.node }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-
-      - name: Setup
-        run: npm i -g @antfu/ni
+          cache: pnpm
 
       - name: Install
-        run: nci
+        run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: nr build
+        run: pnpm run build
 
       - name: Test
-        run: nr test
+        run: pnpm run test

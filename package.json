@@ -1,7 +1,7 @@
 {
   "name": "vite-plugin-meta-env-dts",
   "type": "module",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "packageManager": "pnpm@9.0.6",
   "description": "Automatically generate type declarations based on env.* files.",
   "license": "MIT",

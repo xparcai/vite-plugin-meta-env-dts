@@ -19,6 +19,26 @@ export default defineConfig({
 })
 ```
 
+## Options
+
+### includes
+
+type string | string[]
+
+default ['.env.*']
+
+### prefix
+
+type string | string[]
+
+default ['VITE_']
+
+### dts
+
+type string | false
+
+default 'types/auto-meta-env.d.ts'
+
 ## License
 
 [MIT](LICENSE) License © 2024 [XParCai](https://github.com/xparcai)

@@ -51,11 +51,8 @@
     "release": "bumpp && npm publish",
     "start": "esno src/index.ts",
     "test": "vitest",
-    "test:update": "vitest -u",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "preinstall": "only-allow pnpm",
-    "prepare": "npx simple-git-hooks",
+    "prepare": "pnpm dlx simple-git-hooks",
     "precommit": "esno verify-commit.ts",
     "deps": "nr deps:patch",
     "deps:patch": "taze patch -wri",
@@ -82,7 +79,6 @@
     "fast-glob": "^3.3.2",
     "lint-staged": "^15.2.2",
     "nodemon": "^3.1.0",
-    "only-allow": "^1.2.1",
     "rimraf": "^5.0.5",
     "simple-git-hooks": "^2.11.1",
     "taze": "^0.13.7",
@@ -95,6 +91,6 @@
     "commit-msg": "pnpm run precommit"
   },
   "lint-staged": {
-    "*": "pnpm run lint:fix"
+    "*": "pnpm run lint --fix"
   }
 }

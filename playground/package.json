@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "scripts": {
+    "dev": "cross-env DEBUG=vite-plugin-meta-env-dts:* vite --port 9999",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "vite": "^5.2.10",
+    "vite-plugin-inspect": "^0.8.4"
+  }
+}

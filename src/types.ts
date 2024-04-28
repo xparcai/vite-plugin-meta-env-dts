@@ -1,4 +1,4 @@
-export interface EnvOptions {
+export interface Options {
   /**
    * Scan env file regexp
    *
@@ -19,41 +19,8 @@ export interface EnvOptions {
   dts?: string | false
 }
 
-export interface ResolvedEnvOptions {
+export interface ResolvedOptions {
   includes: string[]
   prefix: string[]
-  dts: string
-}
-
-export interface CssOptions {
-  includes?: string | string[]
-  dts?: string | false
-}
-
-export interface Options {
-  /**
-   * Generate dts dir
-   * set false to disable all
-   *
-   * @default 'types'
-   */
-  dir?: string | false
-
-  /**
-   * Scan env file
-   * set true to scan ['.env.*'] and prefix = 'VITE_'
-   * set false to disable
-   * set regexp to scan env file and prefix = 'VITE_'
-   * set object to detailed configuration
-   *
-   * @default true
-   */
-  env?: boolean | string | string[] | EnvOptions
-
-  css?: boolean | string | string[] | CssOptions
-}
-
-export interface ResolvedOptions {
-  dir: string
-  env: ResolvedEnvOptions
+  dts: string | false
 }

@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
-import type { ResolvedEnvOptions } from '../types'
+import type { ResolvedOptions } from '../types'
 import { getLikeType } from './utils'
 
 export interface Env {
@@ -11,24 +11,17 @@ export interface Env {
   required: boolean
 }
 
-export function parseEnv(data: string): Env[] {
+export function parseMetaEnv(data: string): Env[] {
   data = data.replace(/\r\n?/gm, '\n')
   const regexp = /(?:^|^)\s*((?:\s*#.+\n)*)?(?:export\s+)?([\w.-]+)(?:\s*=\s*?|:\s+?)(\s*'(?:\\'|[^'])*'|\s*"(?:\\"|[^"])*"|\s*`(?:\\`|[^`])*`|[^#\r\n]+)?[^#\r\n]*(#.*)?(?:$|$)/gm
 
-  const env: Env[] = []
+  const meteEnv: Env[] = []
   let match: RegExpExecArray | null
   // eslint-disable-next-line no-cond-assign
   while ((match = regexp.exec(data)) !== null) {
-    // 注释
     const remark = match[1] || match[4] || ''
-
-    // 变量名
     const label = match[2].trim()
-
-    // 变量值
     let value = (match[3] || '').trim()
-
-    // 引号开头
     const quoteRegExp = /^(['"`])([\s\S]*)\1$/gm
     const isString = quoteRegExp.test(value)
 
@@ -37,7 +30,7 @@ export function parseEnv(data: string): Env[] {
 
     const required = !['', null, undefined].includes(value)
 
-    env.push({
+    meteEnv.push({
       remark,
       label,
       value,
@@ -46,31 +39,37 @@ export function parseEnv(data: string): Env[] {
     })
   }
 
-  return env
+  return meteEnv
 }
 
-export function generateEnv(envMap: Map<Env['label'], Env>, root: string, envOptions: ResolvedEnvOptions) {
-  const generateEnvMap: Env[] = []
-  envMap.forEach((env, label) => {
-    if (envOptions.prefix.some(prefix => label.startsWith(prefix)))
-      generateEnvMap.push(env)
-  })
-  const envFile = resolve(root, envOptions.dts)
+export function writeMetaEnvDts(meteEnvMap: Map<string, Env>, options: ResolvedOptions) {
+  if (options.dts !== false) {
+    const canWriteMetaEnvMap: Env[] = []
+    meteEnvMap.forEach((env, label) => {
+      if (options.prefix.some(prefix => label.startsWith(prefix)))
+        canWriteMetaEnvMap.push(env)
+    })
 
-  if (!existsSync(dirname(envFile)))
-    mkdirSync(dirname(envFile), { recursive: true })
+    const envFile = resolve(options.dts)
 
-  writeFileSync(
-    envFile,
-    generateInterface(generateEnvMap),
-  )
+    if (!existsSync(dirname(envFile)))
+      mkdirSync(dirname(envFile), { recursive: true })
+
+    writeFileSync(
+      envFile,
+      setInterface(canWriteMetaEnvMap),
+    )
+  }
 }
 
-function generateInterface(envMap: Env[]) {
+/**
+ * write interface
+ */
+function setInterface(envMap: Env[]) {
   return `// Auto Generate By vite-plugin-meta-env-dts
 // https://github.com/xparcai/vite-plugin-meta-env-dts
 interface ImportMetaEnv {
-  ${envMap.map(generateDeclareLine).join('\n  ')}
+  ${envMap.map(setDeclareLine).join('\n  ')}
 }
 
 interface ImportMeta {
@@ -79,14 +78,20 @@ interface ImportMeta {
 `
 }
 
-function generateDeclareLine(env: Env): string {
-  return `${generateRemarkLine(env)}
+/**
+ * write declare
+ */
+function setDeclareLine(env: Env): string {
+  return `${setRemarkLine(env)}
   readonly ${env.label}${
     env.required ? ':' : '?:'
   } ${env.likely}`.replace(/^\s+|\s+$/g, '')
 }
 
-function generateRemarkLine(env: Env): string {
+/**
+ * write remark
+ */
+function setRemarkLine(env: Env): string {
   if (!env.remark)
     return ''
   return `/**

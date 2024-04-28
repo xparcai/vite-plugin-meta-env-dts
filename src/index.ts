@@ -4,7 +4,7 @@ import { Context } from './core/context'
 import { VITE_PLUGIN_NAME } from './core/constant'
 
 function createVitePlugin(options?: Options): PluginOption {
-  const ctx = new Context(options || {})
+  const ctx = new Context(options)
   return {
     name: VITE_PLUGIN_NAME,
     enforce: 'pre',

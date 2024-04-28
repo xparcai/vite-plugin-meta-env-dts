@@ -5,6 +5,8 @@ import VitePlugin from '../src'
 export default defineConfig({
   plugins: [
     Inspect(),
-    VitePlugin(),
+    VitePlugin({
+      dts: 'types/auto-env.dts',
+    }),
   ],
 })

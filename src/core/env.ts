@@ -1,7 +1,11 @@
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
+import createDebugger from 'debug'
 import type { ResolvedOptions } from '../types'
 import { getLikeType } from './utils'
+import { VITE_PLUGIN_NAME } from './constant'
+
+const debug = createDebugger(`${VITE_PLUGIN_NAME}:env`)
 
 export interface Env {
   remark: string
@@ -51,6 +55,8 @@ export function writeMetaEnvDts(meteEnvMap: Map<string, Env>, options: ResolvedO
     })
 
     const envFile = resolve(options.dts)
+
+    debug('envFile => ', envFile)
 
     if (!existsSync(dirname(envFile)))
       mkdirSync(dirname(envFile), { recursive: true })

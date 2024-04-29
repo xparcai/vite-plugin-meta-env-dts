@@ -7,6 +7,7 @@ function createVitePlugin(options?: Options): PluginOption {
   const ctx = new Context(options)
   return {
     name: VITE_PLUGIN_NAME,
+    apply: 'serve',
     enforce: 'pre',
     configResolved(config) {
       ctx.setViteConfig(config)

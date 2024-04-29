@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "private": true,
   "scripts": {
     "dev": "cross-env DEBUG=vite-plugin-meta-env-dts:* vite --port 9999",

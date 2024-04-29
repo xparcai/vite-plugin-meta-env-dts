@@ -46,7 +46,7 @@
     "dev": "tsup --watch src",
     "build": "tsup",
     "build:fix": "esno scripts/postbuild.ts",
-    "play": "pnpm run dev --filter playground",
+    "play": "pnpm -C playground run dev",
     "prepublishOnly": "pnpm run build",
     "release": "bumpp && npm publish",
     "start": "esno src/index.ts",
@@ -60,23 +60,24 @@
     "deps:major": "taze major -wri",
     "clean": "nr clean:dist && nr clean:deps",
     "clean:dist": "rimraf dist",
-    "clean:deps": "rimraf node_modules"
+    "clean:deps": "rimraf node_modules && rimraf playground/node_modules"
   },
   "dependencies": {
+    "debug": "^4.3.4",
+    "fast-glob": "^3.3.2",
     "vite": "^5.2.10"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.16.0",
     "@antfu/ni": "^0.21.12",
+    "@types/debug": "^4.1.12",
     "@types/node": "^20.12.7",
     "@vtrbo/utils": "^0.4.1",
     "bumpp": "^9.4.0",
     "chalk": "^5.3.0",
     "cross-env": "^7.0.3",
-    "debug": "^4.3.4",
     "eslint": "8.57.0",
     "esno": "^4.7.0",
-    "fast-glob": "^3.3.2",
     "lint-staged": "^15.2.2",
     "nodemon": "^3.1.0",
     "rimraf": "^5.0.5",

@@ -1,10 +1,14 @@
 import { readFileSync } from 'node:fs'
 import type { ResolvedConfig } from 'vite'
 import fg from 'fast-glob'
+import createDebugger from 'debug'
 import type { Options, ResolvedOptions } from '../types'
 import type { Env } from './env'
 import { parseMetaEnv, writeMetaEnvDts } from './env'
 import { resolveOptions } from './options'
+import { VITE_PLUGIN_NAME } from './constant'
+
+const debug = createDebugger(`${VITE_PLUGIN_NAME}:context`)
 
 export class Context {
   options: ResolvedOptions
@@ -32,6 +36,9 @@ export class Context {
           cwd: this.config.root,
         },
       )
+
+      debug('envFiles => ', envFiles)
+
       envFiles.forEach((path) => {
         const content = readFileSync(path, 'utf-8')
         const envMap = parseMetaEnv(content)
@@ -39,6 +46,9 @@ export class Context {
           this._env.set(env.label, { ...env })
         })
       })
+
+      debug('envMap => ', this._env)
+
       writeMetaEnvDts(this._env, this.options)
     }
   }

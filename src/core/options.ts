@@ -7,5 +7,6 @@ export function resolveOptions(options?: Options): ResolvedOptions {
     includes: options?.includes ? toArray(options.includes) : ENV_INCLUDES,
     prefix: options?.prefix ? toArray(options.prefix) : ENV_PREFIX,
     dts: options?.dts ?? ENV_DTS,
+    custom: options?.custom ? options.custom : {},
   }
 }

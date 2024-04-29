@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import createDebugger from 'debug'
+import { isKeyOfObj } from '@vtrbo/utils'
 import type { ResolvedOptions } from '../types'
 import { getLikeType } from './utils'
 import { VITE_PLUGIN_NAME } from './constant'
@@ -11,11 +12,11 @@ export interface Env {
   remark: string
   label: string
   value: string
-  likely: 'string' | 'boolean' | 'number'
+  likely: 'string' | 'boolean' | 'number' | string
   required: boolean
 }
 
-export function parseMetaEnv(data: string): Env[] {
+export function parseMetaEnv(data: string, custom: ResolvedOptions['custom']): Env[] {
   data = data.replace(/\r\n?/gm, '\n')
   const regexp = /(?:^|^)\s*((?:\s*#.+\n)*)?(?:export\s+)?([\w.-]+)(?:\s*=\s*?|:\s+?)(\s*'(?:\\'|[^'])*'|\s*"(?:\\"|[^"])*"|\s*`(?:\\`|[^`])*`|[^#\r\n]+)?[^#\r\n]*(#.*)?(?:$|$)/gm
 
@@ -32,13 +33,18 @@ export function parseMetaEnv(data: string): Env[] {
     if (isString)
       value = value.replace(quoteRegExp, '$2').replace(/\\n/g, '\n').replace(/\\r/g, '\r')
 
+    let likely = isString ? 'string' : getLikeType(value)
+
+    if (isKeyOfObj(custom, label))
+      likely = custom[label]
+
     const required = !['', null, undefined].includes(value)
 
     meteEnv.push({
       remark,
       label,
       value,
-      likely: isString ? 'string' : getLikeType(value),
+      likely,
       required,
     })
   }

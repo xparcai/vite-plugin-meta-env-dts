@@ -26,7 +26,7 @@ export class Context {
   }
 
   scanEnv() {
-    const { dts, includes } = this.options
+    const { dts, includes, custom } = this.options
     if (dts !== false) {
       const envFiles = fg.sync(
         includes,
@@ -41,7 +41,7 @@ export class Context {
 
       envFiles.forEach((path) => {
         const content = readFileSync(path, 'utf-8')
-        const envMap = parseMetaEnv(content)
+        const envMap = parseMetaEnv(content, custom)
         envMap.forEach((env) => {
           this._env.set(env.label, { ...env })
         })

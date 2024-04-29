@@ -6,7 +6,11 @@ export default defineConfig({
   plugins: [
     Inspect(),
     VitePlugin({
-      dts: 'types/auto-env.dts',
+      dts: 'types/auto-env.d.ts',
+      custom: {
+        VITE_GE: 'string',
+        VITE_STRING: `'abc' | 'bc'`,
+      },
     }),
   ],
 })

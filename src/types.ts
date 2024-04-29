@@ -17,10 +17,16 @@ export interface Options {
    * dts file path
    */
   dts?: string | false
+
+  /**
+   * 自定义类型
+   */
+  custom?: Record<string, string>
 }
 
 export interface ResolvedOptions {
   includes: string[]
   prefix: string[]
   dts: string | false
+  custom: Record<string, string>
 }

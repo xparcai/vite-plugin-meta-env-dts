@@ -16,7 +16,7 @@ interface ImportMetaEnv {
    */
   readonly VITE_GE: string
   readonly VITE_OBJECT: string
-  readonly VITE_STRING: string
+  readonly VITE_STRING: 'abc' | 'bc'
   readonly VITE_ABC: number
 }
 

@@ -11,7 +11,8 @@ function createVitePlugin(options?: Options): PluginOption {
     configResolved(config) {
       ctx.setViteConfig(config)
     },
-    configureServer() {
+    // 这里使用buildStart钩子是为了兼容uniapp
+    buildStart() {
       ctx.scanEnv()
     },
   }
